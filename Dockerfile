@@ -1,14 +1,23 @@
-# Usamos Python 3.11 (compatible con huggingface y sentence-transformers)
-FROM python:3.11-slim
+# Usamos Python 3.11 completo (no slim, para evitar problemas de compilación)
+FROM python:3.11
 
 WORKDIR /app
 
 # Copiamos el requirements
 COPY requirements.txt .
 
-# Instalamos pip y dependencias sin cache
-RUN pip install --upgrade pip \
-    && pip install --no-cache-dir -r requirements.txt
+# Instalamos dependencias del sistema y pip
+RUN apt-get update && apt-get install -y \
+        build-essential \
+        git \
+        curl \
+        ffmpeg \
+        libgl1-mesa-glx \
+        libglib2.0-0 \
+    && pip install --upgrade pip \
+    && pip install --no-cache-dir -r requirements.txt \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 # Copiamos la app
 COPY . .
