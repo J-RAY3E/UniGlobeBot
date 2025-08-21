@@ -1,8 +1,8 @@
 fastapi>=0.99.1
 uvicorn>=0.23.0
 google-cloud-storage>=2.9.0
-sentence-transformers>=2.3.0
-huggingface_hub>=1.17.0
+sentence-transformers==2.2.2
+huggingface_hub>=1.19.1
 torch>=2.8.0
 faiss-cpu>=1.7.4
 yandex-cloud-ml-sdk>=0.1.2
