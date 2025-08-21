@@ -1,43 +1,24 @@
-# ==============================
-# Etapa 1: Build / instalación
-# ==============================
-FROM python:3.12-slim AS builder
+# Usamos Python completo para evitar problemas de dependencias
+FROM python:3.12
 
+# Directorio de trabajo
 WORKDIR /app
 
-# Dependencias del sistema necesarias solo para compilación
-RUN apt-get update && apt-get install -y --no-install-recommends \
-        build-essential \
-        git \
-        wget \
-    && rm -rf /var/lib/apt/lists/*
-
-# Copiar requirements
+# Copiamos el requirements.txt primero para aprovechar cache de Docker
 COPY requirements.txt .
 
-# Instalar dependencias de Python en carpeta temporal /install
+# Actualizamos pip e instalamos dependencias
 RUN pip install --upgrade pip \
-    && pip install --prefix=/install --no-cache-dir -r requirements.txt
+    && pip install --no-cache-dir -r requirements.txt
 
-
-# ==============================
-# Etapa 2: Imagen final ligera
-# ==============================
-FROM python:3.12-slim
-
-WORKDIR /app
-
-# Variables de entorno para que Python sea más eficiente
-ENV PYTHONUNBUFFERED=1 \
-    PYTHONDONTWRITEBYTECODE=1 \
-    PIP_NO_CACHE_DIR=1
-
-# Copiar dependencias desde builder
-COPY --from=builder /install /usr/local
-
-# Copiar solo el código de la app
+# Copiamos todo el código de la app
 COPY . .
 
-# Exponer puerto (FastAPI por defecto 8000)
+# Variables de entorno (puedes cambiar PORT si quieres)
+ENV PORT=8080
+
+# Exponemos el puerto
 EXPOSE 8080
+
+# Comando por defecto para correr la app
 CMD ["uvicorn", "rag:app", "--host", "0.0.0.0", "--port", "8080"]
