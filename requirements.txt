@@ -4,5 +4,7 @@ pydantic==2.7.1
 faiss-cpu==1.12.0
 numpy>=1.26.0
 google-cloud-storage==2.16.0
+huggingface_hub==0.15.1
 sentence-transformers==2.2.2
 yandex-cloud-ml-sdk==0.2.0
+
