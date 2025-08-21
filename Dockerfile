@@ -1,4 +1,4 @@
-# Usamos Python 3.11 completo (no slim, para evitar problemas de compilación)
+# Usamos Python 3.11 completo
 FROM python:3.11
 
 WORKDIR /app
@@ -12,7 +12,7 @@ RUN apt-get update && apt-get install -y \
         git \
         curl \
         ffmpeg \
-        libgl1-mesa-glx \
+        libgl1 \
         libglib2.0-0 \
     && pip install --upgrade pip \
     && pip install --no-cache-dir -r requirements.txt \
@@ -28,3 +28,4 @@ EXPOSE 8080
 
 # Comando por defecto
 CMD ["uvicorn", "rag:app", "--host", "0.0.0.0", "--port", "8080"]
+
