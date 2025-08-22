@@ -3,7 +3,7 @@ FROM python:3.11
 
 WORKDIR /app
 
-# Copiamos el requirements
+# Copiamos requirements
 COPY requirements.txt .
 
 # Instalamos dependencias del sistema y pip
@@ -14,6 +14,7 @@ RUN apt-get update && apt-get install -y \
         ffmpeg \
         libgl1 \
         libglib2.0-0 \
+        gsutil \
     && pip install --upgrade pip \
     && pip install --no-cache-dir -r requirements.txt \
     && apt-get clean \
@@ -21,6 +22,14 @@ RUN apt-get update && apt-get install -y \
 
 # Copiamos la app
 COPY . .
+
+# Copiamos el modelo HuggingFace (ya descargado localmente)
+COPY ./models ./models
+
+# Descargamos vectorstore de GCS al build-time
+RUN mkdir -p /app/vectorstore && \
+    gsutil cp gs://rag-vectorstore-1755763542/vectorstore.faiss /app/vectorstore/ && \
+    gsutil cp gs://rag-vectorstore-1755763542/vectorstore_meta.pkl /app/vectorstore/
 
 # Exponemos el puerto
 ENV PORT=8080
