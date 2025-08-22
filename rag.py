@@ -11,7 +11,7 @@ from yandex_cloud_ml_sdk import YCloudML
 
 # Configuración - ¡USA TU BUCKET REAL!
 BUCKET_NAME = "rag-vectorstore-1755763542"
-MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
+MODEL_NAME = "./models/all-MiniLM-L6-v2"
 TOP_K = 3
 
 # Variables globales que se inicializarán después
@@ -139,3 +139,4 @@ if __name__ == "__main__":
     # Cloud Run siempre define PORT=8080, si no existe usamos 8080 por defecto
     port = int(os.environ.get("PORT", 8080))
     uvicorn.run(app, host="0.0.0.0", port=port, workers=1, reload=False)
+
